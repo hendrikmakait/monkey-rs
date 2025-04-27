@@ -30,6 +30,14 @@ impl Lexer {
         self.read_position += 1;
     }
 
+    fn peek_char(&self) -> u8 {
+        if self.read_position >= self.input.len() {
+            0
+        } else {
+            self.input.as_bytes()[self.read_position]
+        }
+    }
+
     fn is_alphabetic(ch: u8) -> bool {
         match ch {
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => true,
@@ -55,10 +63,24 @@ impl Lexer {
         self.skip_whitespace();
 
         let token = match self.ch {
-            b'=' => Token::Assign,
+            b'=' => {
+                if self.peek_char() == b'=' {
+                    self.read_char();
+                    Token::Equals
+                } else {
+                    Token::Assign
+                }
+            },
             b'+' => Token::Plus,
             b'-' => Token::Minus,
-            b'!' => Token::Bang,
+            b'!' => {
+                if self.peek_char() == b'=' {
+                    self.read_char();
+                    Token::NotEquals
+                } else {
+                    Token::Bang
+                }
+            },
             b'*' => Token::Asterisk,
             b'/' => Token::Slash,
 
@@ -141,7 +163,11 @@ if (5 < 10) {
     return true;
 } else {
     return false;
-}";
+}
+
+10 == 10;
+10 != 9;
+";
 
         let tests = [
             Token::Let,
@@ -209,6 +235,14 @@ if (5 < 10) {
             Token::False,
             Token::Semicolon,
             Token::RBrace,
+            Token::Int(10),
+            Token::Equals,
+            Token::Int(10),
+            Token::Semicolon,
+            Token::Int(10),
+            Token::NotEquals,
+            Token::Int(9),
+            Token::Semicolon,
             Token::EoF,
     ];
 
