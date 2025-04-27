@@ -57,12 +57,22 @@ impl Lexer {
         let token = match self.ch {
             b'=' => Token::Assign,
             b'+' => Token::Plus,
+            b'-' => Token::Minus,
+            b'!' => Token::Bang,
+            b'*' => Token::Asterisk,
+            b'/' => Token::Slash,
+
+            b'<' => Token::Lt,
+            b'>' => Token::Gt,
+
+            b',' => Token::Comma,
+            b';' => Token::Semicolon,
+
             b'(' => Token::LParen,
             b')' => Token::RParen,
             b'{' => Token::LBrace,
             b'}' => Token::RBrace,
-            b',' => Token::Comma,
-            b';' => Token::Semicolon,
+
             0 => Token::EoF,
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 let position = self.position;
@@ -119,6 +129,8 @@ let add = fn(x, y) {
 };
 
 let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
 ";
 
         let tests = [
@@ -157,6 +169,18 @@ let result = add(five, ten);
             Token::Comma,
             Token::Ident("ten".into()),
             Token::RParen,
+            Token::Semicolon,
+            Token::Bang,
+            Token::Minus,
+            Token::Slash,
+            Token::Asterisk,
+            Token::Int(5),
+            Token::Semicolon,
+            Token::Int(5),
+            Token::Lt,
+            Token::Int(10),
+            Token::Gt,
+            Token::Int(5),
             Token::Semicolon,
             Token::EoF,
     ];
