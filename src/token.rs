@@ -4,7 +4,7 @@ pub enum Token {
     EoF,
 
     Ident(String),
-    Int(i64),
+    Int(String),
 
     // Operators
     Assign,

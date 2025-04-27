@@ -108,12 +108,7 @@ impl<'a> Lexer<'a> {
                 while Lexer::is_numeric(self.ch) {
                     self.read_char();
                 }
-                match self.input[position..self.position].parse() {
-                    Ok(value) => return Token::Int(value),
-                    Err(msg) => {
-                        panic!("{msg}")
-                    }
-                }
+                return Token::Int(self.input[position..self.position].into());
             }
             _ => Token::Illegal,
         };
@@ -172,12 +167,12 @@ if (5 < 10) {
             Token::Let,
             Token::Ident("five".into()),
             Token::Assign,
-            Token::Int(5),
+            Token::Int("5".into()),
             Token::Semicolon,
             Token::Let,
             Token::Ident("ten".into()),
             Token::Assign,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::Semicolon,
             Token::Let,
             Token::Ident("add".into()),
@@ -209,19 +204,19 @@ if (5 < 10) {
             Token::Minus,
             Token::Slash,
             Token::Asterisk,
-            Token::Int(5),
+            Token::Int("5".into()),
             Token::Semicolon,
-            Token::Int(5),
+            Token::Int("5".into()),
             Token::Lt,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::Gt,
-            Token::Int(5),
+            Token::Int("5".into()),
             Token::Semicolon,
             Token::If,
             Token::LParen,
-            Token::Int(5),
+            Token::Int("5".into()),
             Token::Lt,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::RParen,
             Token::LBrace,
             Token::Return,
@@ -234,13 +229,13 @@ if (5 < 10) {
             Token::False,
             Token::Semicolon,
             Token::RBrace,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::Equals,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::Semicolon,
-            Token::Int(10),
+            Token::Int("10".into()),
             Token::NotEquals,
-            Token::Int(9),
+            Token::Int("9".into()),
             Token::Semicolon,
             Token::EoF,
         ];
