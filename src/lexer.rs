@@ -245,8 +245,7 @@ if (5 < 10) {
             Token::EoF,
         ];
 
-        // TODO: Don't take ownership
-        let mut lexer = Lexer::new(input.into());
+        let mut lexer = Lexer::new(input);
         for (i, tt) in tests.iter().enumerate() {
             let token = lexer.next_token();
 
