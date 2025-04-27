@@ -6,6 +6,7 @@ pub enum Token {
     Ident(String),
     Int(i64),
 
+    // Operators
     Assign,
     Plus,
     Minus,
@@ -16,6 +17,7 @@ pub enum Token {
     Lt,
     Gt,
 
+    // Delimiters
     Comma,
     Semicolon,
 
@@ -24,6 +26,12 @@ pub enum Token {
     LBrace,
     RBrace,
 
+    // Keywords
     Function,
     Let,
+    True,
+    False,
+    If,
+    Else,
+    Return,
 }
