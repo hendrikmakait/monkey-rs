@@ -30,7 +30,30 @@ impl Lexer {
         self.read_position += 1;
     }
 
+    fn is_alphabetic(ch: u8) -> bool {
+        match ch {
+            b'a'..=b'z' | b'A'..=b'Z' | b'_' => true,
+            _ => false
+        }
+    }
+
+    fn is_numeric(ch: u8) -> bool {
+        match ch {
+            b'0'..=b'9' => true,
+            _ => false
+        }
+    }
+
+    fn is_whitespace(ch: u8) -> bool {
+        match ch {
+            b' ' | b'\t' | b'\n' | b'\r' => true,
+            _ => false,
+        } 
+    }
+
     pub fn next_token(&mut self) -> Token {
+        self.skip_whitespace();
+
         let token = match self.ch {
             b'=' => Token::Assign,
             b'+' => Token::Plus,
@@ -41,11 +64,44 @@ impl Lexer {
             b',' => Token::Comma,
             b';' => Token::Semicolon,
             0 => Token::EoF,
-            _ => panic!("not implemented"),
+            b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
+                let position = self.position;
+                while Lexer::is_alphabetic(self.ch) {
+                    self.read_char();
+                }
+                return Lexer::identifier_to_token(&self.input[position..self.position]);
+            },
+            b'0'..=b'9' => {
+                let position = self.position;
+                while Lexer::is_numeric(self.ch) {
+                    self.read_char();
+                }
+                match self.input[position..self.position].parse() {
+                    Ok(value) => return Token::Int(value),
+                    Err(msg) => {
+                        panic!("{msg}")
+                    }
+                    
+                }
+            },
+            _ => Token::Illegal,
         };
         self.read_char();
 
         token
+    }
+
+    fn identifier_to_token(identifier: &str) -> Token {
+        match identifier {
+            "fn" => Token::Function,
+            "let" => Token::Let,
+            _ => Token::Ident(identifier.into())
+        }
+    }
+    fn skip_whitespace(&mut self) {
+        while Lexer::is_whitespace(self.ch) {
+            self.read_char();
+        }
     }
 }
 
@@ -55,19 +111,55 @@ mod tests {
 
     #[test]
     fn test_next_token() {
-        let input = "=+(){},;";
+        let input = r"let five = 5;
+let ten = 10;
+
+let add = fn(x, y) {
+    x + y;
+};
+
+let result = add(five, ten);
+";
 
         let tests = [
+            Token::Let,
+            Token::Ident("five".into()),
             Token::Assign,
-            Token::Plus,
+            Token::Int(5),
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident("ten".into()),
+            Token::Assign,
+            Token::Int(10),
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident("add".into()),
+            Token::Assign,
+            Token::Function,
             Token::LParen,
+            Token::Ident("x".into()),
+            Token::Comma,
+            Token::Ident("y".into()),
             Token::RParen,
             Token::LBrace,
+            Token::Ident("x".into()),
+            Token::Plus,
+            Token::Ident("y".into()),
+            Token::Semicolon,
             Token::RBrace,
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident("result".into()),
+            Token::Assign,
+            Token::Ident("add".into()),
+            Token::LParen,
+            Token::Ident("five".into()),
             Token::Comma,
+            Token::Ident("ten".into()),
+            Token::RParen,
             Token::Semicolon,
             Token::EoF,
-        ];
+    ];
 
         // TODO: Don't take ownership
         let mut lexer = Lexer::new(input.into());
@@ -78,3 +170,4 @@ mod tests {
         }
     }
 }
+
