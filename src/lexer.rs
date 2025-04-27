@@ -1,14 +1,14 @@
 use crate::token::Token;
 
-struct Lexer {
-    input: String,
+pub struct Lexer<'a> {
+    input: &'a str,
     position: usize,
     read_position: usize,
     ch: u8,
 }
 
-impl Lexer {
-    pub fn new(input: String) -> Self {
+impl<'a> Lexer<'a> {
+    pub fn new(input: &'a str) -> Self {
         let mut lexer = Lexer {
             input,
             position: 0,
@@ -41,14 +41,14 @@ impl Lexer {
     fn is_alphabetic(ch: u8) -> bool {
         match ch {
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => true,
-            _ => false
+            _ => false,
         }
     }
 
     fn is_numeric(ch: u8) -> bool {
         match ch {
             b'0'..=b'9' => true,
-            _ => false
+            _ => false,
         }
     }
 
@@ -56,7 +56,7 @@ impl Lexer {
         match ch {
             b' ' | b'\t' | b'\n' | b'\r' => true,
             _ => false,
-        } 
+        }
     }
 
     pub fn next_token(&mut self) -> Token {
@@ -70,7 +70,7 @@ impl Lexer {
                 } else {
                     Token::Assign
                 }
-            },
+            }
             b'+' => Token::Plus,
             b'-' => Token::Minus,
             b'!' => {
@@ -80,7 +80,7 @@ impl Lexer {
                 } else {
                     Token::Bang
                 }
-            },
+            }
             b'*' => Token::Asterisk,
             b'/' => Token::Slash,
 
@@ -102,7 +102,7 @@ impl Lexer {
                     self.read_char();
                 }
                 return Lexer::identifier_to_token(&self.input[position..self.position]);
-            },
+            }
             b'0'..=b'9' => {
                 let position = self.position;
                 while Lexer::is_numeric(self.ch) {
@@ -113,9 +113,8 @@ impl Lexer {
                     Err(msg) => {
                         panic!("{msg}")
                     }
-                    
                 }
-            },
+            }
             _ => Token::Illegal,
         };
         self.read_char();
@@ -132,7 +131,7 @@ impl Lexer {
             "if" => Token::If,
             "else" => Token::Else,
             "return" => Token::Return,
-            _ => Token::Ident(identifier.into())
+            _ => Token::Ident(identifier.into()),
         }
     }
     fn skip_whitespace(&mut self) {
@@ -244,7 +243,7 @@ if (5 < 10) {
             Token::Int(9),
             Token::Semicolon,
             Token::EoF,
-    ];
+        ];
 
         // TODO: Don't take ownership
         let mut lexer = Lexer::new(input.into());
@@ -255,4 +254,3 @@ if (5 < 10) {
         }
     }
 }
-

@@ -17,6 +17,9 @@ pub enum Token {
     Lt,
     Gt,
 
+    Equals,
+    NotEquals,
+
     // Delimiters
     Comma,
     Semicolon,
