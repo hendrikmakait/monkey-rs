@@ -66,7 +66,7 @@ impl<'a> Lexer<'a> {
             b'=' => {
                 if self.peek_char() == b'=' {
                     self.read_char();
-                    Token::Equals
+                    Token::Eq
                 } else {
                     Token::Assign
                 }
@@ -76,7 +76,7 @@ impl<'a> Lexer<'a> {
             b'!' => {
                 if self.peek_char() == b'=' {
                     self.read_char();
-                    Token::NotEquals
+                    Token::Neq
                 } else {
                     Token::Bang
                 }
@@ -95,7 +95,7 @@ impl<'a> Lexer<'a> {
             b'{' => Token::LBrace,
             b'}' => Token::RBrace,
 
-            0 => Token::EoF,
+            0 => Token::EOF,
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 let position = self.position;
                 while Lexer::is_alphabetic(self.ch) {
@@ -230,21 +230,21 @@ if (5 < 10) {
             Token::Semicolon,
             Token::RBrace,
             Token::Int("10".into()),
-            Token::Equals,
+            Token::Eq,
             Token::Int("10".into()),
             Token::Semicolon,
             Token::Int("10".into()),
-            Token::NotEquals,
+            Token::Neq,
             Token::Int("9".into()),
             Token::Semicolon,
-            Token::EoF,
+            Token::EOF,
         ];
 
         let mut lexer = Lexer::new(input);
-        for (i, tt) in tests.iter().enumerate() {
-            let token = lexer.next_token();
+        for expected in tests.into_iter() {
+            let actual = lexer.next_token();
 
-            assert_eq!(token, *tt);
+            assert_eq!(actual, expected);
         }
     }
 }

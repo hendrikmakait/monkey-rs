@@ -15,7 +15,7 @@ where
             Ok(_) => {
                 let mut lexer = lexer::Lexer::new(buffer.as_str());
                 let mut token = lexer.next_token();
-                while token != Token::EoF {
+                while token != Token::EOF {
                     writeln!(writer, "{:?}", token).expect("Failed to write token.");
                     token = lexer.next_token();
                 }
