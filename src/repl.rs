@@ -1,6 +1,6 @@
 use std::io;
 
-use crate::{lexer, token::Token};
+use crate::{lexer::Lexer, token::Token};
 
 pub fn start<R: ?Sized, W: ?Sized>(reader: &mut R, writer: &mut W)
 where
@@ -13,7 +13,7 @@ where
         match reader.read_line(&mut buffer) {
             Ok(0) => return,
             Ok(_) => {
-                let mut lexer = lexer::Lexer::new(buffer.as_str());
+                let mut lexer = Lexer::new(buffer.as_str());
                 let mut token = lexer.next_token();
                 while token != Token::EOF {
                     writeln!(writer, "{:?}", token).expect("Failed to write token.");
