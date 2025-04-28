@@ -142,7 +142,8 @@ mod tests {
 
     #[test]
     fn test_next_token() {
-        let input = r"let five = 5;
+        let input = r"
+let five = 5;
 let ten = 10;
 
 let add = fn(x, y) {
