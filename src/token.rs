@@ -5,7 +5,7 @@ pub enum Token {
     Illegal,
     EOF,
 
-    Ident(String),
+    Identifier(String),
     Int(String),
 
     // Operators
@@ -46,7 +46,7 @@ impl fmt::Display for Token {
             Token::Illegal => f.write_str("ILLEGAL"),
             Token::EOF => f.write_str("EOF"),
 
-            Token::Ident(ident) => f.write_str(ident),
+            Token::Identifier(identifier) => f.write_str(identifier),
             Token::Int(int) => f.write_str(int),
 
             Token::Assign => f.write_str("="),

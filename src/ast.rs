@@ -13,7 +13,11 @@ pub enum Expression {
 
 #[derive(Debug)]
 pub enum Statement {
-    Let { token: Token, name: Identifier, value: Option<Expression> },
+    Let {
+        token: Token,
+        name: Identifier,
+        value: Option<Expression>,
+    },
 }
 
 pub struct Let {
@@ -31,9 +35,8 @@ pub struct Identifier {
 impl<'a> Program {
     pub fn new() -> Self {
         Program {
-            statements: Vec::new()
+            statements: Vec::new(),
         }
-        
     }
 }
 
